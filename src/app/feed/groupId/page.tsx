@@ -5,6 +5,7 @@ import { createClient } from "@supabase/supabase-js";
 import NoticeCard from "@/components/NoticeCard";
 import Sidebar from "@/components/Sidebar";
 
+export const dynamic = "force-dynamic";
 // Supabase Init
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,

@@ -2,6 +2,7 @@
 import { useState } from "react";
 import { uploadNoticeImage } from "@/lib/uploadImage";
 
+export const dynamic = "force-dynamic";
 export default function AdminUpload() {
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
