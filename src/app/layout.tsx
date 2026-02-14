@@ -1,16 +1,21 @@
-"use client";
-import { useEffect } from "react";
-import OneSignal from "react-onesignal";
+import OneSignalInit from "./OneSignalInit";
 
-export default function OneSignalInit() {
-  useEffect(() => {
-    OneSignal.init({
-      appId: "YOUR_ONESIGNAL_APP_ID",
-      allowLocalhostAsSecureOrigin: true,
-    }).then(() => {
-      OneSignal.Slidedown.promptPush(); // Permission maangne ke liye pop-up
-    });
-  }, []);
+export const metadata = {
+  title: "DateUp",
+  description: "Privacy First Notice Platform",
+};
 
-  return null;
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  return (
+    <html lang="en">
+      <body>
+        <OneSignalInit />
+        {children}
+      </body>
+    </html>
+  );
 }
