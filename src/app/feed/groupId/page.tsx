@@ -1,25 +1,23 @@
-"use client"; // Filtering ke liye client component zaroori hai
+"use client";
 
 import { useEffect, useState } from "react";
-import { createClient } from "@supabase/supabase-js";
+// 1. Apna central supabase client import karein
+import { supabase } from "@/lib/supabase";
 import NoticeCard from "@/components/NoticeCard";
 import Sidebar from "@/components/Sidebar";
 
 export const dynamic = "force-dynamic";
-// Supabase Init
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-);
 
 export default function FeedPage({ params }: { params: { groupId: string } }) {
   const [allNotices, setAllNotices] = useState<any[]>([]);
   const [filteredNotices, setFilteredNotices] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
-  // 1. Fetch notices on mount
   useEffect(() => {
     async function fetchNotices() {
+      // 2. Safety check: Agar supabase client initialize nahi hua toh ruk jao
+      if (!supabase) return;
+
       const { data, error } = await supabase
         .from("notices")
         .select("*")
@@ -34,6 +32,8 @@ export default function FeedPage({ params }: { params: { groupId: string } }) {
     }
     fetchNotices();
   }, [params.groupId]);
+
+  // ... baaki filter logic same rahega
 
   // 2. Filter Logic
   const handleFilter = (tag: string) => {
