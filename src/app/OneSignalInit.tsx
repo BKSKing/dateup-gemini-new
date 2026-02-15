@@ -5,7 +5,7 @@ import OneSignal from "react-onesignal";
 export default function OneSignalInit() {
   useEffect(() => {
     OneSignal.init({
-      appId: "YOUR_ONESIGNAL_APP_ID",
+      appId: process.env.NEXT_PUBLIC_ONESIGNAL_APP_ID!,
       allowLocalhostAsSecureOrigin: true,
     }).then(() => {
       OneSignal.Slidedown.promptPush();

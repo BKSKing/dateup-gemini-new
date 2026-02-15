@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-// 1. Apna central supabase client import karein
+import Head from "next/head"; // Head import karein metadata ke liye
 import { supabase } from "@/lib/supabase";
 import NoticeCard from "@/components/NoticeCard";
 import Sidebar from "@/components/Sidebar";
@@ -15,7 +15,6 @@ export default function FeedPage({ params }: { params: { groupId: string } }) {
 
   useEffect(() => {
     async function fetchNotices() {
-      // 2. Safety check: Agar supabase client initialize nahi hua toh ruk jao
       if (!supabase) return;
 
       const { data, error } = await supabase
@@ -33,9 +32,6 @@ export default function FeedPage({ params }: { params: { groupId: string } }) {
     fetchNotices();
   }, [params.groupId]);
 
-  // ... baaki filter logic same rahega
-
-  // 2. Filter Logic
   const handleFilter = (tag: string) => {
     if (tag === "All") {
       setFilteredNotices(allNotices);
@@ -45,33 +41,53 @@ export default function FeedPage({ params }: { params: { groupId: string } }) {
   };
 
   if (loading)
-    return <div className="p-10 text-center">Loading notices...</div>;
+    return (
+      <div className="p-10 text-center bg-black text-white min-h-screen">
+        Loading notices...
+      </div>
+    );
 
   return (
-    <div className="flex min-h-screen bg-black text-white">
-      {/* Sidebar - handleFilter prop pass karna mat bhoolna */}
-      <Sidebar groupId={params.groupId} onFilterChange={handleFilter} />
+    <>
+      <Head>
+        <title>DateUp | Important Notice</title>
+        <meta
+          property="og:title"
+          content="DateUp - Professional Notice Board"
+        />
+        <meta
+          property="og:description"
+          content="Important notices that don't get lost in chats."
+        />
+        <meta property="og:image" content="/dateup-preview.png" />
+        <meta property="og:type" content="website" />
+      </Head>
 
-      {/* Main Feed */}
-      <main className="flex-1 max-w-2xl mx-auto border-x border-zinc-800 min-h-screen pb-20">
-        <header className="sticky top-0 z-10 bg-black/80 backdrop-blur-md p-4 border-b border-zinc-800">
-          <h2 className="text-xl font-bold italic text-blue-500">
-            DateUp Feed
-          </h2>
-        </header>
+      <div className="flex min-h-screen bg-black text-white">
+        {/* Sidebar */}
+        <Sidebar groupId={params.groupId} onFilterChange={handleFilter} />
 
-        <div className="flex flex-col">
-          {filteredNotices.length > 0 ? (
-            filteredNotices.map((notice) => (
-              <NoticeCard key={notice.id} notice={notice} />
-            ))
-          ) : (
-            <p className="p-10 text-center text-zinc-500">
-              No notices found in this category.
-            </p>
-          )}
-        </div>
-      </main>
-    </div>
+        {/* Main Feed */}
+        <main className="flex-1 max-w-2xl mx-auto border-x border-zinc-800 min-h-screen pb-20">
+          <header className="sticky top-0 z-10 bg-black/80 backdrop-blur-md p-4 border-b border-zinc-800">
+            <h2 className="text-xl font-bold italic text-blue-500">
+              DateUp Feed
+            </h2>
+          </header>
+
+          <div className="flex flex-col">
+            {filteredNotices.length > 0 ? (
+              filteredNotices.map((notice) => (
+                <NoticeCard key={notice.id} notice={notice} />
+              ))
+            ) : (
+              <p className="p-10 text-center text-zinc-500">
+                No notices found in this category.
+              </p>
+            )}
+          </div>
+        </main>
+      </div>
+    </>
   );
 }
